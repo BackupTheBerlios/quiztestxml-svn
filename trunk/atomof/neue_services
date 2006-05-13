@@ -1,0 +1,5 @@
+
+Service TemplateProvider
+   - type framework - modulprivat => friend
+   - jedes Modul sollte eigenen Provider für Templates haben
+   - Template Engines nutzen einheitliche API des Providers
