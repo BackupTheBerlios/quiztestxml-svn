@@ -1,6 +1,6 @@
 <?php
 
-if(strstr(__FILE__,$_SERVER['PHP_SELF'])) require('../../../core/protect.php');
+if(strpos(__FILE__,$_SERVER['PHP_SELF'])===FALSE) require('../../../core/protect.php');
 
 list($controller,$service,$modul)=$IN;
 
