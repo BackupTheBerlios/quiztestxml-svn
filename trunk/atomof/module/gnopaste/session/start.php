@@ -1,4 +1,5 @@
 <?php
+
     /** 
     * $Id: index.php 38 2005-08-09 17:55:47Z mosez $
     * vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
@@ -28,32 +29,32 @@
 
 list($controller,$service,$modul)=$IN;
 
-$lang = &$controller->framework['i18n']->messages;
-$prov = $controller->friend('provider',$modul);
-
-$tmpl  = $prov->template->get("header.tpl");
-$imgs  = $prov->image->path();
-$style = $prov->style->path();
-
 /**
- * replace vars - header.tpl
- */
-$tmpl = preg_replace ("/<#L_ACRONYM#>/", $lang['acronym'], $tmpl);
-$tmpl = preg_replace ("/<#L_CHARSET#>/", $lang['charset'], $tmpl);
+*  define session und sessionvars
+*/
+if( !$controller->framework['session'] ) 
+    session_start();
+$controller->framework['session']=1;
 
-$tmpl = preg_replace ("/<#L_PAGE_TITLE#>/", $controller->service('page/title',null,1), $tmpl);
-$tmpl = preg_replace ("/<#L_SITENAME#>/", $config['site_name'], $tmpl);
-
-$tmpl = preg_replace ("/<#IMAGE_PATH#>/", $imgs, $tmpl);
-$tmpl = preg_replace ("/<#STYLE_PATH#>/", $style, $tmpl);
-// $tmpl = preg_replace ("/<#SITEURL#>/", GNOPASTE_URL, $tmpl);
-
-$license = $controller->service('page/license',$modul,1);
-$tmpl = preg_replace ("/<#L_LICENSE#>/",$license,$tmpl);
-
-/**
- * output - header.tpl
- */
-$OUT = $tmpl;
+if(!isset($_SESSION['name']))
+{
+	$_SESSION['name'] = '';
+}
+if(!isset($_SESSION['tab_length']))
+{
+	$_SESSION['tab_length'] = '';
+}
+if(!isset($_SESSION['code_lang']))
+{
+	$_SESSION['code_lang'] = '';
+}
+if(!isset($_SESSION['description']))
+{
+	$_SESSION['description'] = '';
+}
+if(!isset($_SESSION['code']))
+{
+	$_SESSION['code'] = '';
+}
 
 ?>

@@ -33,12 +33,30 @@ class DebugApp extends tmf_controller {
        return parent::service($service,$dir,$background);
    }
 
+   function run_services(){
+       $args=func_get_args();
+       echo "RUN SERVICES";
+       print_r($args);
+       return call_user_func_array("parent::run_services",$args);
+   }
+    
    function setup_hierarchy($modul){
        parent::setup_hierarchy($modul);
-       echo "DEBUG: [",implode(", ",$this->hierarchy),"]";
+       echo "DEBUG: [",implode(", ",$this->hierarchy),"]\n";
+   }
+
+   function service_args($service,$default=array()){
+       list($mod,$val)=$this->needs($service);
+       echo "DEBUG: ARGS - service => $service, modul => $mod, values => ["
+            . join(", ",$val),"]";
+       return array_merge(array('modul'=>$mod),$default,$val);
    }
     
    function run(){ $this->output_from_modul(); }
+}
+
+class WebApp extends DebugApp {
+
 }
 
 ?>

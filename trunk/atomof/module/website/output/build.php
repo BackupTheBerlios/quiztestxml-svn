@@ -2,7 +2,7 @@
 
 $controller=$IN[0];
 
-$controller->run_services(array(
+$controller->run_services(
      'application/prepare'
     ,'document/type'
     ,'document/start'
@@ -13,6 +13,6 @@ $controller->run_services(array(
     ,'document/style'
     ,'document/body'
     ,'application/main'
-    ,'document/finish'));
+    ,'document/finish');
     
 ?>

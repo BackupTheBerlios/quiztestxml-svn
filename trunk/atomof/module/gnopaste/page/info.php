@@ -28,20 +28,22 @@
 
 list($controller,$service,$modul)=$IN;
 
-$lang = &$controller->framework['i18n']->messages;
-$prov = $controller->friend('provider',$modul);
+$tp = $controller->friend('templateprovider',$modul);
 
-$tmpl  = $prov->template->get("header.tpl");
-$imgs  = $prov->image->path();
-$style = $prov->style->path();
+$tmpl = $tp->get("header.tpl");
+
+$ip = $controller->friend('imageprovider',$modul);
+$imgs = $ip->path();
+
+$sp = $controller->friend('styleprovider',$modul);
+$style = $sp->path();
 
 /**
  * replace vars - header.tpl
  */
 $tmpl = preg_replace ("/<#L_ACRONYM#>/", $lang['acronym'], $tmpl);
 $tmpl = preg_replace ("/<#L_CHARSET#>/", $lang['charset'], $tmpl);
-
-$tmpl = preg_replace ("/<#L_PAGE_TITLE#>/", $controller->service('page/title',null,1), $tmpl);
+$tmpl = preg_replace ("/<#L_PAGE_TITLE#>/", $config['page_title'], $tmpl);
 $tmpl = preg_replace ("/<#L_SITENAME#>/", $config['site_name'], $tmpl);
 
 $tmpl = preg_replace ("/<#IMAGE_PATH#>/", $imgs, $tmpl);

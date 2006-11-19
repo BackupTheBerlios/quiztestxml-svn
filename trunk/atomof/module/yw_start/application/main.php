@@ -1,6 +1,7 @@
 <?php
 
-if(strpos(__FILE__,$_SERVER['PHP_SELF'])===FALSE) require('../../../core/protect.php');
+// Make sure no one attempts to run this script "directly"
+if(stristr(__FILE__,$_SERVER['PHP_SELF'])) require('../../../core/protect.php');
 
 list($controller,$service,$modul)=$IN;
 

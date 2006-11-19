@@ -22,6 +22,26 @@ define('TMF_MODUL_DIR','module');  # modules directory
 define('TMF_MEDIA_DIR','media');   # images, styles, flash, ...
 define('TMF_I18N_DIR','i18n');     # translations
 
+
+/**
+* generation time
+*/
+function tmf_starttime(){
+   static $starttime;
+   if( $starttime )
+      return $starttime;
+   $mtime = microtime();
+   $mtime = explode(" ",$mtime);
+   $mtime = $mtime[1] + $mtime[0];
+   $starttime = $mtime;
+}
+tmf_starttime();
+
+/* for modules which use that stuff */
+if( defined("IMPORT_TOOLS") ){
+    require_once("core/tools.php");
+}
+
 class tmf_util {
     function subdirs($dir,$skip=array()){
         $subdirs=array();
@@ -85,6 +105,10 @@ class tmf_module {
 	return array_keys($this->module);
     }
 
+    function free($mod){
+        unset($this->module[$mod]);
+    }
+
     function merge($dir,$arg){
 	foreach($arg as $key => $val){
 	   if(is_array($val)){
@@ -138,6 +162,7 @@ class tmf_controller {
        $this->step("preregister"); # unused until now
        $this->step("register");
        $this->setup_hierarchy($top);
+       $this->remove_disabled_modules();
        $this->requirements();
        $this->step("postregister");
    }
@@ -159,6 +184,17 @@ class tmf_controller {
             if($step=="register"){
                die("no register file in dir $d!");
             }
+         }
+      }
+   }
+
+   // remove disabled modules which are not in hierarchy
+
+   function remove_disabled_modules(){
+      foreach ( $this->module->dirs() as $d ){
+         if( $this->in_hierarchy($d) ) continue;
+         if( ! $this->module->module[$d]['enable'] ){
+            $this->module->free($d);
          }
       }
    }
@@ -198,6 +234,8 @@ class tmf_controller {
          }
       }
       $newserv="error/service_not_found";
+      if( $service == $newserv )
+         die;
       $this->set_srv_needs($newserv,$service);
       $service=$newserv;
       return $this->service_modul($service);
@@ -244,6 +282,7 @@ class tmf_controller {
     * Bei gleichen Frameworks gewinnt das in der Hierarchy weiter oben stehnde Modul,
     * wenn es nicht aus dem selben Modul geladen wird. Dann wird dieses Framework ergaenzt.
     * Diese Eigenschaft (add_info) sollte im Framework implementiert sein.
+    * TODO: warum ein Framework laden wenn es durch ein höherstehendes ersetzt wird?
     */
    function requirements(){
       $loaded=array();
@@ -278,11 +317,14 @@ class tmf_controller {
     * 
     */
    
-   function run_services($services){
+   function run_services(){
+      $services=func_get_args();
+      $out="";
       foreach ( $services as $serv ){
-         if( is_array($serv) ) $this->service($serv[0],$serv[1],$serv[2]);
+         if( is_array($serv) ) $out .= $this->service($serv[0],$serv[1],$serv[2]);
          else                  $this->service($serv);
       }
+      return $out;
    }
 
    function service($service,$dir=FALSE,$background=FALSE){
@@ -294,7 +336,7 @@ class tmf_controller {
       if($background)
          return $OUT;
       else
-         echo $OUT;
+         echo $OUT; return '';
    }
 
    function service_execution($service,$dir){

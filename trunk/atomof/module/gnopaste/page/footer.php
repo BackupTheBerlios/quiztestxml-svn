@@ -1,4 +1,5 @@
 <?php
+
     /** 
     * $Id: index.php 38 2005-08-09 17:55:47Z mosez $
     * vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
@@ -31,29 +32,25 @@ list($controller,$service,$modul)=$IN;
 $lang = &$controller->framework['i18n']->messages;
 $prov = $controller->friend('provider',$modul);
 
-$tmpl  = $prov->template->get("header.tpl");
-$imgs  = $prov->image->path();
-$style = $prov->style->path();
+$tmpl  = $prov->template->get("footer.tpl");
+
+    $starttime=tmf_starttime();
+    $mtime = microtime();
+    $mtime = explode(" ",$mtime);
+    $mtime = $mtime[1] + $mtime[0];
+    $endtime = $mtime;
+    $gentime = round(($endtime - $starttime), 3).'s';
 
 /**
- * replace vars - header.tpl
- */
-$tmpl = preg_replace ("/<#L_ACRONYM#>/", $lang['acronym'], $tmpl);
-$tmpl = preg_replace ("/<#L_CHARSET#>/", $lang['charset'], $tmpl);
-
-$tmpl = preg_replace ("/<#L_PAGE_TITLE#>/", $controller->service('page/title',null,1), $tmpl);
-$tmpl = preg_replace ("/<#L_SITENAME#>/", $config['site_name'], $tmpl);
-
-$tmpl = preg_replace ("/<#IMAGE_PATH#>/", $imgs, $tmpl);
-$tmpl = preg_replace ("/<#STYLE_PATH#>/", $style, $tmpl);
-// $tmpl = preg_replace ("/<#SITEURL#>/", GNOPASTE_URL, $tmpl);
-
-$license = $controller->service('page/license',$modul,1);
-$tmpl = preg_replace ("/<#L_LICENSE#>/",$license,$tmpl);
+* replace vars - footer.tpl
+*/
+$tmpl = preg_replace ("/<#L_FOOTER#>/", stripslashes($config['copyright']), $tmpl);
+$tmpl = preg_replace ("/<#GENERATED_IN#>/", $lang['generated'].' '.$gentime, $tmpl);
+$tmpl = preg_replace ("/<#GNOPASTE_VERSION#>/", $config['gnopaste_version'], $tmpl);
 
 /**
- * output - header.tpl
- */
-$OUT = $tmpl;
+* output - footer.tpl
+*/
+$OUT=$tmpl;
 
 ?>

@@ -1,13 +1,13 @@
 <?php
     /** 
-    * $Id: index.php 38 2005-08-09 17:55:47Z mosez $
+    * $Id: en_main.php 36 2005-08-08 21:56:51Z mosez $
     * vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
     *
     * This file is part of GNOPASTE
     *
     * @author   GNOPASTE Development Team <devel@ghcif.de>
     * @since    19/01/2005
-    * @version  $Revision: 38 $
+    * @version  $Revision: 36 $
     *
     * Copyright (C) 2004-2005 by ghcif.de <devel@ghcif.de>
     *   
@@ -26,34 +26,37 @@
     * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
     */
 
-list($controller,$service,$modul)=$IN;
+    setlocale(LC_TIME, 'en_US', 'en_GB', 'en', 'eng');
+    
+	$lang['acronym'] = 'en';
+	$lang['charset'] = 'iso-8859-1';
+	
+	$lang['dateformat'] = 'r';
+	
+	$lang['usersettings'] = 'Userdata';	
+	$lang['name'] = 'Name';
+	$lang['codelang'] = 'Scriptlanguage';
+	$lang['tab_width'] = 'Tabwidth';
+	$lang['date'] = 'Date';
+	$lang['ip'] = 'IP';
+	$lang['description'] = 'Description';
+	$lang['code'] = 'Code';
+	$lang['sending'] = 'Send';
+	$lang['postbutton'] = 'Add Entry';
 
-$lang = &$controller->framework['i18n']->messages;
-$prov = $controller->friend('provider',$modul);
+	$lang['back_to_main'] = 'Back to Mainpage';
+	$lang['saved'] = 'Saved';
+	$lang['saved_text'] = 'You can see your Entry at the following URL.';
+	$lang['generated'] = 'generated in';
+	
+	$lang['error'] = 'Error';
+	$lang['unknown_id'] = 'Unknown PasteID';
+	$lang['bad_id'] = 'Unserialized PasteID';
+	$lang['empty_code'] = 'Field Code is empty';
 
-$tmpl  = $prov->template->get("header.tpl");
-$imgs  = $prov->image->path();
-$style = $prov->style->path();
+    $lang['user_no_name'] = 'Anonymous';
+    $lang['user_no_description'] = 'The user was to lazy to give a description';
 
-/**
- * replace vars - header.tpl
- */
-$tmpl = preg_replace ("/<#L_ACRONYM#>/", $lang['acronym'], $tmpl);
-$tmpl = preg_replace ("/<#L_CHARSET#>/", $lang['charset'], $tmpl);
-
-$tmpl = preg_replace ("/<#L_PAGE_TITLE#>/", $controller->service('page/title',null,1), $tmpl);
-$tmpl = preg_replace ("/<#L_SITENAME#>/", $config['site_name'], $tmpl);
-
-$tmpl = preg_replace ("/<#IMAGE_PATH#>/", $imgs, $tmpl);
-$tmpl = preg_replace ("/<#STYLE_PATH#>/", $style, $tmpl);
-// $tmpl = preg_replace ("/<#SITEURL#>/", GNOPASTE_URL, $tmpl);
-
-$license = $controller->service('page/license',$modul,1);
-$tmpl = preg_replace ("/<#L_LICENSE#>/",$license,$tmpl);
-
-/**
- * output - header.tpl
- */
-$OUT = $tmpl;
+$messages=$lang;
 
 ?>
